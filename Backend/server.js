@@ -15,6 +15,62 @@ const db = mysql.createConnection({
     database: 'shopping_web'
 });
 
+
+// User Registration Endpoint
+app.post('/register', (req, res) => {
+    const { email, password, username, shippingAddress } = req.body;
+
+    // Check if the user already exists in the database
+    const checkUserQuery = "SELECT * FROM user WHERE email = ?";
+    db.query(checkUserQuery, [email], (err, results) => {
+        if (err) {
+            console.error("Error checking user existence:", err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        if (results.length > 0) {
+            // User already exists, return error
+            return res.status(400).json({ error: 'User already exists' });
+        } else {
+            // Insert new user into the database
+            const insertUserQuery = "INSERT INTO user (email, password, username, shipping_adrss) VALUES (?, ?, ?, ?)";
+            db.query(insertUserQuery, [email, password, username, shippingAddress], (err, result) => {
+                if (err) {
+                    console.error("Error registering user:", err);
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                }
+
+                console.log("User registered successfully");
+                return res.status(201).json({ message: 'User registered successfully' });
+            });
+        }
+    });
+});
+
+
+// User Login Endpoint
+app.post('/login', (req, res) => {
+    const { email, password } = req.body;
+
+    // Check if the user exists in the database with the provided email and password
+    const loginUserQuery = "SELECT * FROM user WHERE email = ? AND password = ?";
+    db.query(loginUserQuery, [email, password], (err, results) => {
+        if (err) {
+            console.error("Error logging in:", err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        if (results.length > 0) {
+            // User found, return user data
+            const user = results[0];
+            return res.status(200).json({ user });
+        } else {
+            // User not found or invalid credentials
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+    });
+});
+
 // Define a route to serve images
 app.get('/images/:imageName', (req, res) => {
     const imageName = req.params.imageName;
@@ -38,34 +94,35 @@ app.get('/product', (req, res) => {
     });
 });
 
+
+
+// Backend
 app.get('/cart', (req, res) => {
+    // Query the database to fetch all cart items
     const sql = "SELECT * FROM cart";
     db.query(sql, (err, data) => {
         if (err) {
             console.error("Error fetching cart items:", err);
             return res.status(500).json({ error: 'Internal Server Error' });
         }
-        return res.json(data);
+        return res.json({ cart: data });
     });
 });
 
-app.post('/cart', (req, res) => {
-    const { product_name, quantity } = req.body;
-
-    if (!product_name || !quantity) {
-        return res.status(400).json({ error: 'Invalid request. Product name or quantity is missing in the request body' });
-    }
-
-    const sql = "INSERT INTO cart (products, quantities) VALUES (?, ?)";
-    db.query(sql, [product_name, quantity], (err, result) => {
+// Backend
+app.delete('/cart/:cartId', (req, res) => {
+    const { cartId } = req.params;
+    const sql = "DELETE FROM cart WHERE cart_id = ?";
+    db.query(sql, [cartId], (err, result) => {
         if (err) {
-            console.error("Error adding product to cart:", err);
+            console.error("Error deleting item from cart:", err);
             return res.status(500).json({ error: 'Internal Server Error' });
         }
-        console.log("Product added to cart:", product_name);
-        return res.status(200).json({ message: 'Product added to cart successfully' });
+        console.log("Item deleted from cart:", cartId);
+        return res.status(200).json({ message: 'Item deleted from cart successfully' });
     });
 });
+
 
 app.listen(8081, () => {
     console.log("Listening on port 8081");

@@ -1,14 +1,15 @@
+// ProductList.jsx
 import React, { useEffect, useState } from "react";
+import "./product.css"; // Import CSS file
 
 function ProductList({ navigateToCart }) {
   const [data, setData] = useState([]);
-  const [quantities, setQuantities] = useState({}); // State to store quantities for each product
+  const [quantities, setQuantities] = useState({});
 
   useEffect(() => {
     fetch('http://localhost:8081/product')
       .then(res => res.json())
       .then(data => {
-        // Initialize quantities state with default quantity of 1 for each product
         const initialQuantities = data.reduce((acc, product) => {
           acc[product.product_id] = 1;
           return acc;
@@ -26,7 +27,7 @@ function ProductList({ navigateToCart }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ product_id, product_name, quantity }), // Pass product_id, product_name, and quantity
+        body: JSON.stringify({ product_id, product_name, quantity }),
       });
 
       if (response.ok) {
@@ -51,11 +52,13 @@ function ProductList({ navigateToCart }) {
   };
 
   return (
+    
     <div className="product-grid">
+      
       {data.map((product, index) => (
         <div key={index} className="product-card">
           <img src={product.image} alt={product.product_name} />
-          <div>
+          <div className="product-details">
             <h3>{product.product_name}</h3>
             <p>{product.description}</p>
             <p>Price: {product.pricing}</p>
@@ -64,13 +67,12 @@ function ProductList({ navigateToCart }) {
               type="number"
               min="1"
               value={quantities[product.product_id] || 1}
-              onChange={(event) => handleQuantityChange(product.product_id, event)} // Update quantity state
+              onChange={(event) => handleQuantityChange(product.product_id, event)}
             />
             <button onClick={() => addToCart(product.product_id, product.product_name, quantities[product.product_id])}>Add to Cart</button>
           </div>
         </div>
       ))}
-      <button onClick={navigateToCart}>Go to Cart</button>
     </div>
   );
 }
