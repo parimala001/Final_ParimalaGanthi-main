@@ -21,11 +21,11 @@ function UserRegister() {
         body: JSON.stringify({ email, password, username, shippingAddress }),
       });
       const data = await response.json();
-      // Handle response (e.g., redirect to login page)
+      
     } catch (error) {
       console.error("Error registering user:", error);
       setError("Error registering user. Please try again later.");
-      // Handle error (e.g., display error message to user)
+      
     }
   };
 

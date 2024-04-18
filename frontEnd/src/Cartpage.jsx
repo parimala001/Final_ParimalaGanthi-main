@@ -1,6 +1,6 @@
 // Cartpage.jsx
 import React, { useState, useEffect } from "react";
-import "./cart.css"; // Import CSS file
+import "./cart.css"; 
 
 function Cartpage({ username }) {
   const [cart, setCartItems] = useState([]);
@@ -43,10 +43,9 @@ function Cartpage({ username }) {
     }
   };
 
-  // Handle checkout
+  // to  Handlecheckout
   const handleCheckout = () => {
-    // Perform checkout process here
-    // For demo purpose, just display order placed message
+    // display order placed message
     setOrderPlaced(true);
   };
 

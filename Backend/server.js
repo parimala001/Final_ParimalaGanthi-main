@@ -15,6 +15,9 @@ const db = mysql.createConnection({
     database: 'shopping_web'
 });
 
+app.get('/', (req, res) => {
+    return res.json("From Backend...");
+});
 
 // User Registration Endpoint
 app.post('/register', (req, res) => {
@@ -71,7 +74,7 @@ app.post('/login', (req, res) => {
     });
 });
 
-// Define a route to serve images
+// route to serve images
 app.get('/images/:imageName', (req, res) => {
     const imageName = req.params.imageName;
     // Assuming your images are stored in the public/images directory
@@ -79,10 +82,9 @@ app.get('/images/:imageName', (req, res) => {
     res.sendFile(imagePath);
 });
 
-app.get('/', (req, res) => {
-    return res.json("From Backend...");
-});
 
+
+// products page Endpoint
 app.get('/product', (req, res) => {
     const sql = "SELECT * FROM product";
     db.query(sql, (err, data) => {
@@ -96,7 +98,7 @@ app.get('/product', (req, res) => {
 
 
 
-// Backend
+
 app.get('/cart', (req, res) => {
     // Query the database to fetch all cart items
     const sql = "SELECT * FROM cart";
@@ -109,7 +111,7 @@ app.get('/cart', (req, res) => {
     });
 });
 
-// Backend
+// to delete cart items
 app.delete('/cart/:cartId', (req, res) => {
     const { cartId } = req.params;
     const sql = "DELETE FROM cart WHERE cart_id = ?";

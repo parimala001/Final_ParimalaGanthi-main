@@ -18,7 +18,7 @@ function UserLogin({ handleLoginSuccess }) {
       });
       const data = await response.json();
       if (response.ok && data.user) {
-        const username = "username"; // Replace this with the actual username
+        const username = "username"; 
         handleLoginSuccess(username);
       } else {
         setError("Invalid email or password");

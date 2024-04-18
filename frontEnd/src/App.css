@@ -1,7 +1,7 @@
 .nav-bar {
   display: flex;
   align-items: center;
-  background-color: #343a40; /* Set background color for navbar */
+  background-color: #343a40; 
   padding: 0.5rem;
 }
 
@@ -19,7 +19,7 @@
 .nav-logo {
   font-size: 3rem;
   font-weight: bold;
-  color: #f2f0f0; /* Adjust color as needed */
+  color: #f2f0f0; 
   margin-right: auto;
 }
 .nav-button:last-child {

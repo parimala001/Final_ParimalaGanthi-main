@@ -32,14 +32,14 @@ function ProductList({ navigateToCart }) {
 
       if (response.ok) {
         console.log("Product added to cart:", product_name);
-        // Add any additional logic here (e.g., update UI, show success message)
+       
       } else {
         console.error("Failed to add product to cart:", response.statusText);
-        // Handle error (e.g., show error message to user)
+        
       }
     } catch (error) {
       console.error("Error adding product to cart:", error);
-      // Handle error (e.g., show error message to user)
+      
     }
   };
 
